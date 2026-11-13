@@ -56,9 +56,6 @@ class DocumentParsingVlTool(Tool):
 
             # Get model selection
             model = tool_parameters.get("model") or DEFAULT_VL_MODEL
-            # Saved workflows may still pass the previous model ID.
-            if model == "PaddleOCR-VL-1.6":
-                model = "PaddleOCR-VL-1.8"
             page_ranges = tool_parameters.get("pageRanges")
 
             # Call API

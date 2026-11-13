@@ -23,7 +23,9 @@ DEFAULT_OCR_MODEL = "PP-OCRv6"
 DEFAULT_DOCUMENT_MODEL = "PP-StructureV3"
 DEFAULT_VL_MODEL = "PaddleOCR-VL-1.8"
 OCR_MODELS = frozenset({"PP-OCRv5", "PP-OCRv5-latin", "PP-OCRv6"})
-DOCUMENT_MODELS = frozenset({"PP-StructureV3", "PaddleOCR-VL", "PaddleOCR-VL-1.5", "PaddleOCR-VL-1.8"})
+DOCUMENT_MODELS = frozenset(
+    {"PP-StructureV3", "PaddleOCR-VL", "PaddleOCR-VL-1.5", "PaddleOCR-VL-1.6", "PaddleOCR-VL-1.8"}
+)
 EXTRA_OPTIONS_PARAMETER = "extraOptions"
 RESERVED_EXTRA_OPTION_KEYS = frozenset(
     {
@@ -607,7 +609,7 @@ def _submit_job(
     """Submit job and return job_id.
 
     Args:
-        model: Model name (e.g., "PP-OCRv5", "PP-StructureV3", "PaddleOCR-VL-1.8")
+        model: Model name (e.g., "PP-OCRv5", "PP-StructureV3", "PaddleOCR-VL-1.6")
         file_url: URL of the file (if using URL input)
         file_path: Path to the file (if using file input)
         options: Optional payload parameters
@@ -837,7 +839,7 @@ def call_paddleocr_api(
     """Call PaddleOCR API using async job pattern.
 
     Args:
-        model: Model name (e.g., "PP-OCRv5", "PP-StructureV3", "PaddleOCR-VL-1.8")
+        model: Model name (e.g., "PP-OCRv5", "PP-StructureV3", "PaddleOCR-VL-1.6")
         file_url: URL of the file (if using URL input)
         file_path: Path to the file (if using file input)
         options: Optional payload parameters

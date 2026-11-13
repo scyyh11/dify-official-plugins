@@ -36,9 +36,7 @@ The `file` input supports Dify uploaded image/PDF files directly and submits the
 | --- | --- |
 | Text Recognition | `PP-OCRv6` (default), `PP-OCRv5`, `PP-OCRv5-latin` |
 | Document Parsing | `PP-StructureV3` |
-| Large Model Document Parsing | `PaddleOCR-VL-1.8` (default), `PaddleOCR-VL-1.5`, `PaddleOCR-VL` |
-
-Existing workflows configured with `PaddleOCR-VL-1.6` submit jobs using `PaddleOCR-VL-1.8`.
+| Large Model Document Parsing | `PaddleOCR-VL-1.8` (default), `PaddleOCR-VL-1.6`, `PaddleOCR-VL-1.5`, `PaddleOCR-VL` |
 
 All tools accept an optional PDF page range such as `2,4-6`. Both document parsing tools can skip Markdown image resources when they are not needed and can return an additional DOCX file alongside the Markdown and JSON results.
 

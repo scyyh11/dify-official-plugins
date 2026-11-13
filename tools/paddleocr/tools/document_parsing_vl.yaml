@@ -20,6 +20,10 @@ parameters:
           zh_Hans: PaddleOCR-VL-1.8
         value: PaddleOCR-VL-1.8
       - label:
+          en_US: PaddleOCR-VL-1.6
+          zh_Hans: PaddleOCR-VL-1.6
+        value: PaddleOCR-VL-1.6
+      - label:
           en_US: PaddleOCR-VL-1.5
           zh_Hans: PaddleOCR-VL-1.5
         value: PaddleOCR-VL-1.5
