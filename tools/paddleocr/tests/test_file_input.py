@@ -349,10 +349,10 @@ def test_response_data_preserves_legacy_flat_payload():
 
 def test_model_validation_rejects_cross_task_and_unknown_models():
     validate_model("PP-OCRv6", is_document_parsing=False)
-    validate_model("PaddleOCR-VL-1.6", is_document_parsing=True)
+    validate_model("PaddleOCR-VL-1.8", is_document_parsing=True)
 
     with pytest.raises(RuntimeError, match="Unsupported OCR model"):
-        validate_model("PaddleOCR-VL-1.6", is_document_parsing=False)
+        validate_model("PaddleOCR-VL-1.8", is_document_parsing=False)
     with pytest.raises(RuntimeError, match="Unsupported document parsing model"):
         validate_model("HPD-Parsing", is_document_parsing=True)
 
@@ -362,7 +362,9 @@ def test_vl18_model_option_submits_document_job(monkeypatch):
     model_parameter = next(param for param in tool_yaml["parameters"] if param["name"] == "model")
     model = model_parameter["default"]
     assert model == "PaddleOCR-VL-1.8"
-    assert model in {option["value"] for option in model_parameter["options"]}
+    options = {option["value"] for option in model_parameter["options"]}
+    assert model in options
+    assert "PaddleOCR-VL-1.6" not in options
 
     response = MagicMock(status_code=200)
     response.json.return_value = {"data": {"jobId": "job-vl18"}}
@@ -703,7 +705,12 @@ def test_document_parsing_sends_normalized_file_to_api(monkeypatch):
 
 @pytest.mark.parametrize(
     ("model_parameters", "expected_model"),
-    [({}, "PaddleOCR-VL-1.8"), ({"model": "PaddleOCR-VL-1.6"}, "PaddleOCR-VL-1.6")],
+    [
+        ({}, "PaddleOCR-VL-1.8"),
+        ({"model": "PaddleOCR-VL-1.8"}, "PaddleOCR-VL-1.8"),
+        ({"model": "PaddleOCR-VL-1.6"}, "PaddleOCR-VL-1.8"),
+        ({"model": "PaddleOCR-VL-1.5"}, "PaddleOCR-VL-1.5"),
+    ],
 )
 def test_document_parsing_vl_sends_normalized_file_to_api(monkeypatch, model_parameters, expected_model):
     file = make_file(
