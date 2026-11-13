@@ -29,6 +29,7 @@ from tools.utils import (  # noqa: E402
     _poll_job,
     _response_data,
     _submit_job,
+    call_paddleocr_api,
     download_image_from_url,
     extract_base_url,
     get_api_client_config,
@@ -354,6 +355,34 @@ def test_model_validation_rejects_cross_task_and_unknown_models():
         validate_model("PaddleOCR-VL-1.6", is_document_parsing=False)
     with pytest.raises(RuntimeError, match="Unsupported document parsing model"):
         validate_model("HPD-Parsing", is_document_parsing=True)
+
+
+def test_vl18_model_option_submits_document_job(monkeypatch):
+    tool_yaml = load_tool_yaml("document_parsing_vl")
+    model_parameter = next(param for param in tool_yaml["parameters"] if param["name"] == "model")
+    model = "PaddleOCR-VL-1.8"
+    assert model in {option["value"] for option in model_parameter["options"]}
+
+    response = MagicMock(status_code=200)
+    response.json.return_value = {"data": {"jobId": "job-vl18"}}
+    post = MagicMock(return_value=response)
+    monkeypatch.setattr("requests.post", post)
+    monkeypatch.setattr("tools.utils._poll_job", lambda *_: ([], {}))
+
+    call_paddleocr_api(
+        model=model,
+        file_url="https://example.com/report.pdf",
+        file_path=None,
+        options={"returnMarkdownImages": False},
+        client_config={"base_url": "https://paddle.example.com", "headers": {}},
+        is_document_parsing=True,
+    )
+
+    assert post.call_args.kwargs["json"] == {
+        "fileUrl": "https://example.com/report.pdf",
+        "model": "PaddleOCR-VL-1.8",
+        "optionalPayload": {"returnMarkdownImages": False},
+    }
 
 
 def test_poll_rejects_unknown_job_state(monkeypatch):
@@ -825,7 +854,7 @@ def test_manifest_version_is_bumped():
     with open(os.path.join(PLUGIN_DIR, "manifest.yaml"), encoding="utf-8") as manifest_file:
         manifest = yaml.safe_load(manifest_file)
 
-    assert manifest["version"] == "0.3.2"
+    assert manifest["version"] == "0.3.3"
 
 
 def test_provider_validation_uses_latest_default_model(monkeypatch):

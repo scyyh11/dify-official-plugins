@@ -24,7 +24,7 @@ DEFAULT_DOCUMENT_MODEL = "PP-StructureV3"
 DEFAULT_VL_MODEL = "PaddleOCR-VL-1.6"
 OCR_MODELS = frozenset({"PP-OCRv5", "PP-OCRv5-latin", "PP-OCRv6"})
 DOCUMENT_MODELS = frozenset(
-    {"PP-StructureV3", "PaddleOCR-VL", "PaddleOCR-VL-1.5", "PaddleOCR-VL-1.6"}
+    {"PP-StructureV3", "PaddleOCR-VL", "PaddleOCR-VL-1.5", "PaddleOCR-VL-1.6", "PaddleOCR-VL-1.8"}
 )
 EXTRA_OPTIONS_PARAMETER = "extraOptions"
 RESERVED_EXTRA_OPTION_KEYS = frozenset(
