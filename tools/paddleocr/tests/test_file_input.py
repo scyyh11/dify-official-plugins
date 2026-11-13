@@ -360,7 +360,8 @@ def test_model_validation_rejects_cross_task_and_unknown_models():
 def test_vl18_model_option_submits_document_job(monkeypatch):
     tool_yaml = load_tool_yaml("document_parsing_vl")
     model_parameter = next(param for param in tool_yaml["parameters"] if param["name"] == "model")
-    model = "PaddleOCR-VL-1.8"
+    model = model_parameter["default"]
+    assert model == "PaddleOCR-VL-1.8"
     assert model in {option["value"] for option in model_parameter["options"]}
 
     response = MagicMock(status_code=200)
@@ -700,7 +701,11 @@ def test_document_parsing_sends_normalized_file_to_api(monkeypatch):
     }
 
 
-def test_document_parsing_vl_sends_normalized_file_to_api(monkeypatch):
+@pytest.mark.parametrize(
+    ("model_parameters", "expected_model"),
+    [({}, "PaddleOCR-VL-1.8"), ({"model": "PaddleOCR-VL-1.6"}, "PaddleOCR-VL-1.6")],
+)
+def test_document_parsing_vl_sends_normalized_file_to_api(monkeypatch, model_parameters, expected_model):
     file = make_file(
         b"image-bytes",
         filename="scan.jpg",
@@ -721,12 +726,13 @@ def test_document_parsing_vl_sends_normalized_file_to_api(monkeypatch):
             "pageRanges": "1-3",
             "promptLabel": "undefined",
             "useLayoutDetection": True,
+            **model_parameters,
         },
     )
 
     assert "file_path" in captured["kwargs"]
     assert captured["kwargs"]["file_path"] == "temp_file.png"
-    assert captured["kwargs"]["model"] == "PaddleOCR-VL-1.6"
+    assert captured["kwargs"]["model"] == expected_model
     assert captured["kwargs"]["is_document_parsing"] is True
     assert captured["kwargs"]["page_ranges"] == "1-3"
     assert captured["kwargs"]["options"] == {"useLayoutDetection": True}

@@ -13,7 +13,7 @@ parameters:
   - name: model
     type: select
     required: false
-    default: PaddleOCR-VL-1.6
+    default: PaddleOCR-VL-1.8
     options:
       - label:
           en_US: PaddleOCR-VL-1.8
